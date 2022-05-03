@@ -1,0 +1,52 @@
+@page
+@using LEPS.Pages.Shared
+@model LEPS.Pages.Series.Create
+
+@{
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+<div>
+    <form method="post">
+        <div class="card" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title">Create Series</h5>
+                <div>
+                    <label for="name">Name</label>
+                    <input id="name"></input>
+                </div>
+            </div>
+        </div>
+        <br/>
+        <div class="card" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title">Event</h5>
+                <div>
+                    <i style="float: right;" class="fa-solid fa-plus"></i>
+                    <div>
+                        <label for="event-name">Event Name</label>
+                        <input id="event-name"></input>
+                    </div>
+                    <div>
+                        <label for="event-cost">Entry Fee</label>
+                        <input id="event-cost"></input>
+                    </div>
+                    <div>
+                        <label for="event-date">Date</label>
+                        <input id="event-date" type="datetime-local"></input>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>
