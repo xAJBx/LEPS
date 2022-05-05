@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using LEPS.Entities;
+using LEPS.Pages.Players;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -29,6 +32,12 @@ namespace LEPS
                 .Where(x => typeof(IInstaller).IsAssignableFrom(x) && !x.IsInterface && !x.IsAbstract).Select(Activator.CreateInstance).Cast<IInstaller>().ToList();
 
             installers.ForEach(installer => installer.InstallServices(services, Configuration)); 
+            services.AddAutoMapper(ConfigureMapping);
+        }
+
+        public static void ConfigureMapping(IMapperConfigurationExpression config)
+        {
+            config.CreateMap<Player, Edit.EditPlayerRequest>().ReverseMap();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
