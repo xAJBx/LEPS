@@ -34,7 +34,7 @@ namespace LEPS.Controllers
             var eventId = Int32.Parse(jsonn["eventId"].ToString());
 
             var playerFound = _context.Players.Any(p => p.Id == playerId);
-            var eventFound = _context.Players.Any(e => e.Id == eventId);
+            var eventFound = _context.Event.Any(e => e.Id == eventId);
 
             if (!playerFound || !eventFound)
             {
