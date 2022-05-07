@@ -1,0 +1,103 @@
+@page
+@using System.Linq
+@using Microsoft.EntityFrameworkCore
+@using OpenDataShare
+
+@model LEPS.Pages.Players.Edit
+@inject ApplicationDbContext ApplicationDbContext
+
+@{
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+   
+    var eventSelects = new[] {new SelectListItem
+    {
+        Text = "Select an event"
+    }}.Concat(ApplicationDbContext.Event.Where(e => e.DateTime > DateTime.UtcNow).Select(e => new SelectListItem
+    {
+        Value = e.Id.ToString(),
+        Text = e.Name ?? "No Name"
+    }));
+    
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Edit Player</title>
+</head>
+<body>
+<div>
+    <form method="post">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card mb-2">
+                    <div class="card-header">
+                        Basic Info
+                        <input type="submit" value="Save" class="btn btn-primary float-right" />
+                    </div>
+                    <div class="card-body">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" asp-for="Player.Id" />
+                        <div class="form-row">
+                            <div class="form-group col-sm">
+                                <label asp-for="Player.FirstName" class="control-label">First Name</label>
+                                <input asp-for="Player.FirstName" class="form-control" />
+                                <span asp-validation-for="Player.FirstName" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-sm">
+                                <label asp-for="Player.LastName" class="control-label">Last Name</label>
+                                <input asp-for="Player.LastName" class="form-control" />
+                                <span asp-validation-for="Player.LastName" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-sm-3">
+                                <label asp-for="Player.Email" class="control-label">Email</label>
+                                <input asp-for="Player.Email" class="form-control" />
+                                <span asp-validation-for="Player.Email" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card mb-2">
+                <div class="card-header">
+                    Event Enrollment
+                    <input id="enroll-player" type="button" value="Enroll" class="btn btn-primary float-right" />
+                </div>
+                <div class="card-body">
+                    <form id="enroll-form">
+                        <div class="form-row">
+                            <label>Choose an Event to enroll</label>
+                            <select id="select-onboarding-event" class="form-control mb-3" asp-items="eventSelects" name="eventId"></select>
+                        </div>
+                        <div class="form-row">
+                            <input type="hidden" name="playerId" value='@Request.Query["id"]'/>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    @section Scripts {
+        <script>
+            $("#enroll-player").click(function (){
+                $("#errors").html('');
+                $.ajax({
+                    url: "/api/event/enrollplayer",
+                    data: JSON.stringify(Object.fromEntries(new FormData(document.getElementById("enroll-form")))),
+                    method: "POST",
+                    contentType: "application/json"
+                })
+
+                return false;
+})
+            </script>
+    }
+    
+</div>
+</body>
+</html>

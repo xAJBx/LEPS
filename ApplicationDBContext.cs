@@ -19,7 +19,7 @@ namespace OpenDataShare
         }
         
         public DbSet<Series> Series { get; set; }
-        public DbSet<Event> Events { get; set; }
+        public DbSet<Event> Event { get; set; }
         public DbSet<Player> Players { get; set; }
         public DbSet<EventEnrollment> EventEnrollments { get; set; }
     }
