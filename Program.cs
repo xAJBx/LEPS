@@ -20,7 +20,7 @@ namespace LEPS
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    //webBuilder.UseStartup<Startup>();
+                    webBuilder.UseStartup<Startup>();
                     webBuilder.UseUrls("http://10.20.30.192:6969/");
                 });
     }
