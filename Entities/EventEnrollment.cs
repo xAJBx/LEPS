@@ -1,4 +1,5 @@
 using System;
+using LEPS.Enums;
 
 namespace LEPS.Entities
 {
@@ -10,5 +11,6 @@ namespace LEPS.Entities
         public int EventId { get; set; }
         public Event Event { get; set; }
         public DateTime EnrollDate { get; set; }
+        public EventEnrollmentStatus Status { get; set; }
     }
 }

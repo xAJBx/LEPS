@@ -22,6 +22,7 @@ namespace OpenDataShare
         public DbSet<Event> Event { get; set; }
         public DbSet<Player> Players { get; set; }
         public DbSet<EventEnrollment> EventEnrollments { get; set; }
+        public DbSet<InboundTransaction> InboundTransactions { get; set; }
     }
 
 

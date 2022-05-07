@@ -17,7 +17,13 @@
         Value = e.Id.ToString(),
         Text = e.Name ?? "No Name"
     }));
-    
+
+    var enrollments = ApplicationDbContext.EventEnrollments
+        .Where(ee => ee.PlayerId == Model.Player.Id)
+        .ToArray();
+
+    var payments = ApplicationDbContext.InboundTransactions
+        .Where(it => it.PlayerId == Model.Player.Id);
 }
 
 <!DOCTYPE html>
@@ -70,6 +76,85 @@
         <div class="col-md-12">
             <div class="card mb-2">
                 <div class="card-header">
+                    Player's Enrollments
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Date Enrolled</th>
+                            <th>Event</th>
+                            <th>Status</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var enrollment in enrollments)
+                        {
+                            <tr>
+                                <td>@enrollment.EnrollDate</td>
+                                <td>@ApplicationDbContext.Event.SingleAsync(e => e.Id == enrollment.EventId).Result.Name</td>
+                                <td>@enrollment.Status</td>
+                                <td>
+                                    <script>
+                                                let enrollment = 
+                                                {
+                                                    enrollmentId: @enrollment.Id    
+                                                }
+                                            </script>
+                                    <button onclick="assignEnrollment(enrollment)" class="btn btn-outline-dark btn-sm" 
+                                            data-toggle="modal" 
+                                            data-target="#payEnrollmentModal">Pay</button>
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+                <div class="col-md-12">
+                    <div class="card mb-2">
+                        <div class="card-header">
+                            Player's Payments
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th>Payment Date</th>
+                                    <th>Product</th>
+                                    <th>Amount</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @foreach (var payment in payments)
+                                    {
+                                        <tr>
+                                            <td>@payment.DateTime</td>
+                                            <td>@payment.Product</td>
+                                            <td>@payment.Amount</td>
+                                            <td></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+    
+    
+    
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card mb-2">
+                <div class="card-header">
                     Event Enrollment
                     <input id="enroll-player" type="button" value="Enroll" class="btn btn-primary float-right" />
                 </div>
@@ -87,8 +172,62 @@
             </div>
         </div>
     </div>
+
+    <!-- Pay Enrollment Modal -->
+    <form id="pay-form" method="post">
+        <div class="modal fade" id="payEnrollmentModal" tabindex="-1" role="dialog" aria-labelledby="payEnrollmentModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="payEnrollmentModalLabel">Pay Enrollment</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group col-sm">
+                            <label for="paymentAmountSeries" class="control-label">Series Amount</label>
+                            <input id="paymentAmountSeries" name="paymentAmountSeries" type="number" class="form-control" />
+                        </div>
+                        <div class="form-group col-sm">
+                            <label for="paymentAmountEvent" class="control-label">Event Amount</label>
+                            <input id="paymentAmountEvent" name="paymentAmountEvent" type="number" class="form-control" />
+                        </div>
+                        <div class="form-group col-sm">
+                            <label for="enrollmentId" class="control-label">Enrollment Id</label>
+                            <input id="enrollmentId" name="enrollmentId" type="number" class="form-control" />
+                        </div>
+                        
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button id="pay-enrollment" type="button" class="btn btn-primary">Submit Payment</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
     @section Scripts {
         <script>
+            function assignEnrollment(enrollmentObj){
+                $("#enrollmentId").val(enrollmentObj.enrollmentId);
+            }
+            
+            
+            $("#pay-enrollment").click(function (){
+                $("#errors").html('');
+                $.ajax({
+                    url: "/api/event/payenrollment",
+                    data: JSON.stringify(Object.fromEntries(new FormData(document.getElementById("pay-form")))),
+                    method: "POST",
+                    contentType: "application/json"
+                })
+
+                return false;
+            })
+        
+        
             $("#enroll-player").click(function (){
                 $("#errors").html('');
                 $.ajax({
@@ -99,10 +238,9 @@
                 })
 
                 return false;
-})
-            </script>
+            })
+        </script>
     }
-    
 </div>
 </body>
 </html>

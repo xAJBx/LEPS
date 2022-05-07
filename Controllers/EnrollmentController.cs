@@ -4,7 +4,9 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using LEPS.Entities;
+using LEPS.Enums;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
 using OpenDataShare;
 
@@ -45,6 +47,7 @@ namespace LEPS.Controllers
             {
                 PlayerId = playerId,
                 EventId = eventId,
+                Status = EventEnrollmentStatus.AccountsReceivable,
                 EnrollDate = DateTime.UtcNow
             };
             _context.Add(enrollment);
@@ -53,5 +56,91 @@ namespace LEPS.Controllers
             
             return Ok($"EnrollmentId: {enrollment.Id}");
         }
+        
+        [HttpPost]
+        [Route("payenrollment")]
+        public async Task<IActionResult> editenrollment([FromBody] object json)
+        {
+            var jsonn = JObject.Parse(json.ToString());
+
+            var enrollmentId = Int32.Parse(jsonn["enrollmentId"].ToString());
+            //var enrollmentStatus = Int32.Parse(jsonn["status"].ToString());
+            var paymentAmountEvent = Decimal.Parse(jsonn["paymentAmountEvent"].ToString());
+            var paymentAmountSeries = Decimal.Parse(jsonn["paymentAmountSeries"].ToString());
+           
+            var enrollment = await _context.EventEnrollments.SingleOrDefaultAsync(e => e.Id == enrollmentId);
+            if (enrollment == default)
+            {
+                return BadRequest($"No Enrollment found.");
+            }
+            
+            var eventt = await _context.Event.SingleOrDefaultAsync(e => e.Id == enrollment.EventId);
+            if (eventt == default)
+            {
+                return BadRequest($"Event not found.");
+            }
+
+            var series = await _context.Series.SingleOrDefaultAsync(s => s.Id == eventt.SeriesId);
+            if (series == default)
+            {
+                return BadRequest("Series not found.");
+            }
+            
+            
+            eventt.Pot += paymentAmountEvent;
+            series.Pot += paymentAmountSeries;
+            
+
+            var seriesPaymentLog = new InboundTransaction
+            {
+                Player = enrollment.Player,
+                PlayerId = enrollment.PlayerId,
+                Amount = paymentAmountSeries,
+                Product = Products.Series,
+                ProductId = series.Id
+            };
+            
+            var eventPaymentLog = new InboundTransaction
+            {
+                Player = enrollment.Player,
+                PlayerId = enrollment.PlayerId,
+                Amount = paymentAmountEvent,
+                Product = Products.Event,
+                ProductId = eventt.Id
+            };
+
+
+            if (paymentAmountSeries > 0)
+            {
+                _context.Add(seriesPaymentLog);
+            }
+
+            if (paymentAmountEvent > 0)
+            {
+                _context.Add(eventPaymentLog);
+            }
+            
+            await _context.SaveChangesAsync();
+            
+            var eventPaySum = _context.InboundTransactions.Where(t => (t.Product == Products.Event
+                                                                        && t.ProductId == eventt.Id) ||
+                                                                      (t.Product == Products.Series 
+                                                                       && t.ProductId == series.Id))
+                                                                    .Sum(p => p.Amount);
+            var eventBalance = eventPaySum - eventt.Cost;
+
+            if (eventBalance >= 0)
+            {
+                enrollment.Status = EventEnrollmentStatus.Paid;
+            }
+            
+            
+            await _context.SaveChangesAsync();
+            
+            
+            return Ok($"EnrollmentId: {enrollment.Id}");
+        }
+        
+        
     }
 }
