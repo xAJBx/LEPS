@@ -97,7 +97,8 @@ namespace LEPS.Controllers
                 PlayerId = enrollment.PlayerId,
                 Amount = paymentAmountSeries,
                 Product = Products.Series,
-                ProductId = series.Id
+                ProductId = series.Id,
+                DateTime = DateTime.UtcNow
             };
             
             var eventPaymentLog = new InboundTransaction
@@ -106,7 +107,8 @@ namespace LEPS.Controllers
                 PlayerId = enrollment.PlayerId,
                 Amount = paymentAmountEvent,
                 Product = Products.Event,
-                ProductId = eventt.Id
+                ProductId = eventt.Id,
+                DateTime = DateTime.UtcNow
             };
 
 
