@@ -1,4 +1,4 @@
-bin/
+#LEPS.bin/
 obj/
 /packages/
 riderModule.iml
