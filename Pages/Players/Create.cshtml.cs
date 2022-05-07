@@ -1,6 +1,8 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using LEPS.Entities;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using OpenDataShare;
 
@@ -22,13 +24,13 @@ namespace LEPS.Pages.Players
             
         }
 
-        public void OnPostCreatePlayer()
+        public async Task<IActionResult> OnPostCreatePlayer()
         {
             var email = Request.Form["email"].ToString();
             var emailDupChk = _dbContext.Players.SingleOrDefault(p => p.Email == email);
             if (emailDupChk != default)
             {
-                return;
+                return Page();
             }
 
             var newPlayer = new Player
@@ -41,6 +43,8 @@ namespace LEPS.Pages.Players
 
             _dbContext.Add(newPlayer);
             _dbContext.SaveChanges();
+            
+            return RedirectToPage("./Edit", new { id = newPlayer.Id });
         }
     }
 }
