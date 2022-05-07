@@ -14,7 +14,7 @@
 <body>
 <div>
     <h1>Player Search</h1>
-    <form method="get" asp-page-handler="Search">
+    <form method="post" asp-page-handler="Search">
         <div class="form-row">
             <div class="form-group col-md-3">
                 <label asp-for="Search.FirstName">First Name</label>
@@ -24,7 +24,6 @@
                 <label asp-for="Search.LastName">Last Name</label>
                 <input type="text" asp-for="Search.LastName" class="form-control" />
             </div>
-        
         </div>
         <div class="form-row">
             <button type="submit" class="btn btn-primary mb-2" asp-page-handler="Search">Search</button>
@@ -33,14 +32,6 @@
     {
         if (Model.Player.Any())
         {
-            <div class="mb-2 text-right">
-                <a href="javascript:void(220221)" class="btn btn-primary mr-2" id="check-all">
-                    Check All
-                </a>
-                <a href="javascript:void(220221)" class="btn btn-primary" id="uncheck-all">
-                    Uncheck All
-                </a>
-            </div>
             <table class="table">
                 <thead>
                     <tr>
@@ -84,7 +75,7 @@
             </p>
         }
     }
-    @Html.AntiForgeryToken()
+    
     </form>
 </div>
 </body>

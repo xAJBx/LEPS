@@ -22,15 +22,10 @@ namespace LEPS.Pages.Players
         public IList<Player> Player { get; set; }
 
         [BindProperty(SupportsGet = true)]
-        public TalentIndexSearchTerms Search { get; set; }
-
+        public PlayerIndexSearchTerms Search { get; set; }
         
-        public void OnGet()
-        {
-            
-        }
         
-        public async Task OnGetSearchAsync()
+        public async Task OnPostSearchAsync()
         {
             IQueryable<Player> player = _context.Players;
 
@@ -51,12 +46,10 @@ namespace LEPS.Pages.Players
                 player = player.Where(r => r.LastName.Contains(Search.LastName));
             }
 
-            
-
             Player = await player.ToListAsync();
         }
         
-        public class TalentIndexSearchTerms
+        public class PlayerIndexSearchTerms
         {
             public string FirstName { get; set; }
             public string LastName { get; set; }
