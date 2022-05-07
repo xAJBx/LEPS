@@ -1,0 +1,91 @@
+@page
+@model LEPS.Pages.Players.IndexModel
+
+@{
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Player Search</title>
+</head>
+<body>
+<div>
+    <h1>Player Search</h1>
+    <form method="get" asp-page-handler="Search">
+        <div class="form-row">
+            <div class="form-group col-md-3">
+                <label asp-for="Search.FirstName">First Name</label>
+                <input type="text" asp-for="Search.FirstName" class="form-control" />
+            </div>
+            <div class="form-group col-md-3">
+                <label asp-for="Search.LastName">Last Name</label>
+                <input type="text" asp-for="Search.LastName" class="form-control" />
+            </div>
+        
+        </div>
+        <div class="form-row">
+            <button type="submit" class="btn btn-primary mb-2" asp-page-handler="Search">Search</button>
+        </div>
+    @if (Model.Player != null)
+    {
+        if (Model.Player.Any())
+        {
+            <div class="mb-2 text-right">
+                <a href="javascript:void(220221)" class="btn btn-primary mr-2" id="check-all">
+                    Check All
+                </a>
+                <a href="javascript:void(220221)" class="btn btn-primary" id="uncheck-all">
+                    Uncheck All
+                </a>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Player[0].FirstName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Player[0].LastName)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Player)
+                    {
+                        <tr>
+                            <td>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="@item.Id">
+                                </div>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.FirstName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.LastName)
+                            </td>
+                            <td>
+                                <a asp-page="./Edit" asp-route-id="@item.Id">View</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>
+                No talent found!
+            </p>
+        }
+    }
+    @Html.AntiForgeryToken()
+    </form>
+</div>
+</body>
+</html>
