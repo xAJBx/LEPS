@@ -1,0 +1,44 @@
+@page
+@using OpenDataShare
+@using Microsoft.EntityFrameworkCore
+@model LEPS.Pages.Reports.Attendance
+@inject ApplicationDbContext ApplicationDbContext
+
+@{
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+    var eventEnrollments = ApplicationDbContext.EventEnrollments
+        .Include(e => e.Player)
+        .Include(e => e.Event);
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Attendance</title>
+</head>
+<body>
+<div>
+    <h1>Attendance</h1>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Event</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var enrollment in eventEnrollments)
+        {
+            <tr>
+                <td>@enrollment.Event.Name</td>
+                <td>@enrollment.Player.FirstName</td>
+                <td>@enrollment.Player.LastName</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
