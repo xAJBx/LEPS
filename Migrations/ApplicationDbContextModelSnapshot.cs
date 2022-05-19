@@ -142,6 +142,9 @@ namespace LEPS.Migrations
                     b.Property<string>("Desc")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 

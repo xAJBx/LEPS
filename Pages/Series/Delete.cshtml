@@ -1,0 +1,22 @@
+@page
+@model LEPS.Pages.Series.DeleteModel
+
+@{
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Delete Series</title>
+</head>
+<body>
+<div>
+    <form method="POST">
+        <input type="hidden" name="seriesId" value="@HttpContext.Request.Query["id"]"></input>
+        <button type="submit" class="btn btn-danger">Delete</button>
+    </form>
+</div>
+</body>
+</html>
