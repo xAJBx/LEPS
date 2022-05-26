@@ -96,14 +96,11 @@
                                 <td>@ApplicationDbContext.Event.SingleAsync(e => e.Id == enrollment.EventId).Result.Name</td>
                                 <td>@enrollment.Status</td>
                                 <td>
-                                    <script>
-                                                let enrollment = 
-                                                {
-                                                    enrollmentId: @enrollment.Id    
-                                                }
-                                            </script>
-                                    <button onclick="assignEnrollment(enrollment)" class="btn btn-outline-dark btn-sm" 
-                                            data-toggle="modal" 
+                                    
+                                    
+                                    <button class="btn btn-outline-dark btn-sm"
+                                            data-enrollmentid="@enrollment.Id"
+                                            data-toggle="modal"
                                             data-target="#payEnrollmentModal">Pay</button>
                                 </td>
                             </tr>
@@ -210,20 +207,25 @@
 
     @section Scripts {
         <script>
-            function assignEnrollment(enrollmentObj){
-                $("#enrollmentId").val(enrollmentObj.enrollmentId);
-            }
+            $("#payEnrollmentModal").on("show.bs.modal", e => {
+                //console.log($(e.relatedTarget).data('enrollmentid'));
+                $("#enrollmentId").val($(e.relatedTarget).data('enrollmentid'));
+            })
             
             
             $("#pay-enrollment").click(function (){
                 $("#errors").html('');
                 $.ajax({
                     url: "/api/event/payenrollment",
+                    success: (d) => {
+                        console.log(d);
+                         $("#payEnrollmentModal").modal('hide');
+                    },
                     data: JSON.stringify(Object.fromEntries(new FormData(document.getElementById("pay-form")))),
                     method: "POST",
                     contentType: "application/json"
                 })
-
+                
                 return false;
             })
         

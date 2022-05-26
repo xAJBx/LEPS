@@ -64,7 +64,6 @@ namespace LEPS.Controllers
             var jsonn = JObject.Parse(json.ToString());
 
             var enrollmentId = Int32.Parse(jsonn["enrollmentId"].ToString());
-            //var enrollmentStatus = Int32.Parse(jsonn["status"].ToString());
             var paymentAmountEvent = Decimal.Parse(jsonn["paymentAmountEvent"].ToString());
             var paymentAmountSeries = Decimal.Parse(jsonn["paymentAmountSeries"].ToString());
            
@@ -142,7 +141,19 @@ namespace LEPS.Controllers
             
             return Ok($"EnrollmentId: {enrollment.Id}");
         }
-        
-        
+
+        [HttpPost]
+        [Route("positionsubmition")]
+        public async Task<IActionResult> enrollmentPositionSubmition([FromBody] object json)
+        {
+            var jsonn = JObject.Parse(json.ToString());
+            var enrollmentId = Int32.Parse(jsonn["enrollmentId"].ToString());
+            var position = Int32.Parse(jsonn["standing"].ToString());
+            var enrollment = await _context.EventEnrollments.SingleOrDefaultAsync(e => e.Id == enrollmentId);
+            enrollment.Placement = position;
+            _context.SaveChanges();
+            return Ok($"EnrollmentId: {enrollment.Id}, Position: {position}");
+        }
+
     }
 }

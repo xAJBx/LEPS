@@ -12,5 +12,6 @@ namespace LEPS.Entities
         public Event Event { get; set; }
         public DateTime EnrollDate { get; set; }
         public EventEnrollmentStatus Status { get; set; }
+        public int Placement { get; set; }
     }
 }

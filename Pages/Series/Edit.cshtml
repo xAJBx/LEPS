@@ -1,19 +1,55 @@
 @page
+@using OpenDataShare
+@using Microsoft.EntityFrameworkCore
 @model LEPS.Pages.Series.EditModel
+@inject ApplicationDbContext ApplicationDbContext
 
 @{
     Layout = "~/Pages/Shared/_Layout.cshtml";
+    var events = ApplicationDbContext.Event.Where(e => e.SeriesId.ToString() == HttpContext.Request.Query["Id"].ToString()).ToList();
 }
 
 <!DOCTYPE html>
 
 <html>
 <head>
-    <title></title>
+    <title>Edit Series</title>
+    
 </head>
 <body>
 <div>
-    
+    <h2>Events</h2>
+    @foreach (var eventt in events)
+    {
+        var enrollments = ApplicationDbContext.EventEnrollments.Include(ee => ee.Player).Where(ee => ee.EventId == eventt.Id);
+        var enrollmentCount = enrollments.Count();
+        
+        <div class="card event-card" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title">@eventt.Name</h5>
+                <div>
+                    <i onclick="prependEventCard()" style="float: right;" class="fa-solid fa-plus"></i>
+                    <div>
+                        <label for="event-name">Event Name</label>
+                        <input id="event-name" name="eventName0" value="@eventt.Name"/>
+                    </div>
+                    <div>
+                        <label for="event-cost">Entry Fee</label>
+                        <input type="number" id="event-cost" name="eventCost0" value="@eventt.Cost"/>
+                    </div>
+                    <div>
+                        <label for="event-pot">Pot</label>
+                        <input type="number" id="event-pot" name="eventPot0" value="@eventt.Pot"/>
+                    </div>
+                    <div>
+                        <label for="event-date">Date</label>
+                        <input id="event-date" type="datetime-local" name="eventDate0" value="@eventt.DateTime"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br/>
+    }
 </div>
 </body>
 </html>
