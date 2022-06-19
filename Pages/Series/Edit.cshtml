@@ -28,7 +28,6 @@
             <div class="card-body">
                 <h5 class="card-title">@eventt.Name</h5>
                 <div>
-                    <i onclick="prependEventCard()" style="float: right;" class="fa-solid fa-plus"></i>
                     <div>
                         <label for="event-name">Event Name</label>
                         <input id="event-name" name="eventName0" value="@eventt.Name"/>
@@ -48,8 +47,35 @@
                 </div>
             </div>
         </div>
-        <br/>
+        
+       
     }
+     <h1>New Event</h1>
+            <br/>
+            <div class="card event-card" style="width: 18rem;">
+                <form method="post">
+                <div class="card-body">
+                    <h5 class="card-title">Event</h5>
+                    <div>
+                        <div>
+                            <label for="event-name">Event Name</label>
+                            <input asp-for="Eventt.Name" />
+                        </div>
+                        <div>
+                            <label for="event-cost">Entry Fee</label>
+                            <input asp-for="Eventt.Cost"  />
+                        </div>
+                        <div>
+                            <label for="event-date">Date</label>
+                            <input asp-for="Eventt.DateTime" />
+                        </div>
+                    </div>
+                    <button type="submit">Save</button>
+                </div>
+                    
+                </form>
+            </div>  
+            <br/>
 </div>
 </body>
 </html>

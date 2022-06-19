@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using LEPS.Entities;
 using LEPS.Pages.Players;
+using LEPS.Pages.Series;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -38,6 +39,7 @@ namespace LEPS
         public static void ConfigureMapping(IMapperConfigurationExpression config)
         {
             config.CreateMap<Player, Edit.EditPlayerRequest>().ReverseMap();
+            config.CreateMap<Event, EditModel.EventProps>().ReverseMap();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

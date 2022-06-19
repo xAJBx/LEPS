@@ -6,6 +6,7 @@ function prependEventCard(num){
     $(`
     <br/>
     <div class="card event-card" style="width: 18rem;">
+        <form method="post"
                 <div class="card-body">
                     <h5 class="card-title">Event</h5>
                     <div>
@@ -20,10 +21,13 @@ function prependEventCard(num){
                         </div>
                         <div>
                             <label for="event-date">Date</label>
-                            <input id="event-date" type="datetime-local" name="eventDate${num}"/>
+                            <input id="event-date" type="datetime-local" name="eventDate${num}" />
                         </div>
                     </div>
+                    <button type="submit">Save</button>
                 </div>
+                
+                </form>
             </div>    
 `).insertAfter($(".event-card").last())
 }
