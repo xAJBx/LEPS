@@ -37,8 +37,13 @@ namespace LEPS.Pages.Series
 
             return Page();
         }
-        
-        
+
+        public void OnPostDelete()
+        {
+            _dbContext.Remove(_dbContext.Event.Single(e => e.Id == Eventt.Id));
+            _dbContext.SaveChanges();
+
+        }
         
         public void OnPost()
         {

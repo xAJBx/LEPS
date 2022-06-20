@@ -25,57 +25,71 @@
         var enrollmentCount = enrollments.Count();
         
         <div class="card event-card" style="width: 18rem;">
-            <div class="card-body">
-                <h5 class="card-title">@eventt.Name</h5>
-                <div>
+            <form>
+                <div class="card-body">
+                    <h5 class="card-title">@eventt.Name</h5>
                     <div>
-                        <label for="event-name">Event Name</label>
-                        <input id="event-name" name="eventName0" value="@eventt.Name"/>
-                    </div>
-                    <div>
-                        <label for="event-cost">Entry Fee</label>
-                        <input type="number" id="event-cost" name="eventCost0" value="@eventt.Cost"/>
-                    </div>
-                    <div>
-                        <label for="event-pot">Pot</label>
-                        <input type="number" id="event-pot" name="eventPot0" value="@eventt.Pot"/>
-                    </div>
-                    <div>
-                        <label for="event-date">Date</label>
-                        <input id="event-date" type="datetime-local" name="eventDate0" value="@eventt.DateTime"/>
+                        <div>
+                            <label for="event-name">Event Name</label>
+                            <input asp-for="Eventt.Name" value="@eventt.Name"/>
+                        </div>
+                        <div>
+                            <label for="event-cost">Entry Fee</label>
+                            <input asp-for="Eventt.Cost" type="number"  value="@eventt.Cost"/>
+                        </div>
+                        <div>
+                            <label for="event-pot">Pot</label>
+                            <input asp-for="Eventt.Pot" type="number" value="@eventt.Pot"/>
+                        </div>
+                        <div>
+                            <label for="event-date">Date</label>
+                            <input asp-for="Eventt.DateTime" value="@eventt.DateTime"/>
+                        </div>
+                        <div>
+                            <input asp-for="Eventt.Id" value="@eventt.Id"/>
+                        </div>
                     </div>
                 </div>
-            </div>
+                <button type="submit" asp-page-handler="Delete">Delete</button>
+            </form>
         </div>
         
        
     }
-     <h1>New Event</h1>
-            <br/>
-            <div class="card event-card" style="width: 18rem;">
-                <form method="post">
-                <div class="card-body">
-                    <h5 class="card-title">Event</h5>
+    <a href="#" id="show-new-event">New Event</a>
+    <br/>
+    <div id="new-event" class="card event-card" style="width: 18rem;display: none;">
+        <form method="post">
+            <div class="card-body">
+                <h5 class="card-title">New Event</h5>
+                <div>
                     <div>
-                        <div>
-                            <label for="event-name">Event Name</label>
-                            <input asp-for="Eventt.Name" />
-                        </div>
-                        <div>
-                            <label for="event-cost">Entry Fee</label>
-                            <input asp-for="Eventt.Cost"  />
-                        </div>
-                        <div>
-                            <label for="event-date">Date</label>
-                            <input asp-for="Eventt.DateTime" />
-                        </div>
+                        <label for="event-name">Event Name</label>
+                        <input asp-for="Eventt.Name" />
                     </div>
-                    <button type="submit">Save</button>
+                    <div>
+                        <label for="event-cost">Entry Fee</label>
+                        <input asp-for="Eventt.Cost"  />
+                    </div>
+                    <div>
+                        <label for="event-date">Date</label>
+                        <input asp-for="Eventt.DateTime" />
+                    </div>
                 </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
                     
-                </form>
-            </div>  
-            <br/>
+        </form>
+    </div>  
+    <br/>
 </div>
 </body>
 </html>
+@section Scripts
+{
+  <script>
+   $("#show-new-event").on("click", function (){
+       $("#new-event").show();
+   })
+  </script>  
+}
