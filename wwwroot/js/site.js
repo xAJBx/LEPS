@@ -1,11 +1,11 @@
 ﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 // for details on configuring this project to bundle and minify static web assets.
-
 function prependEventCard(num){
     num =+ 1
     $(`
     <br/>
     <div class="card event-card" style="width: 18rem;">
+        <form method="post"
                 <div class="card-body">
                     <h5 class="card-title">Event</h5>
                     <div>
@@ -20,10 +20,11 @@ function prependEventCard(num){
                         </div>
                         <div>
                             <label for="event-date">Date</label>
-                            <input id="event-date" type="datetime-local" name="eventDate${num}"/>
+                            <input id="event-date" type="datetime-local" name="eventDate${num}" />
                         </div>
                     </div>
                 </div>
+                </form>
             </div>    
 `).insertAfter($(".event-card").last())
 }
