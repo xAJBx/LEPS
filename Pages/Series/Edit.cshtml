@@ -31,27 +31,27 @@
                     <div>
                         <div>
                             <label for="event-name">Event Name</label>
-                            <input asp-for="Eventt.Name" value="@eventt.Name"/>
+                            <input id="Name" value="@eventt.Name"/>
                         </div>
                         <div>
                             <label for="event-cost">Entry Fee</label>
-                            <input asp-for="Eventt.Cost" type="number"  value="@eventt.Cost"/>
+                            <input id="Cost" type="number"  value="@eventt.Cost"/>
                         </div>
                         <div>
                             <label for="event-pot">Pot</label>
-                            <input asp-for="Eventt.Pot" type="number" value="@eventt.Pot"/>
+                            <input id="Pot" type="number" value="@eventt.Pot"/>
                         </div>
                         <div>
                             <label for="event-date">Date</label>
-                            <input asp-for="Eventt.DateTime" value="@eventt.DateTime"/>
+                            <input id="DateTime" value="@eventt.DateTime"/>
                         </div>
                         <div>
-                            <input asp-for="Eventt.Id" value="@eventt.Id"/>
+                            <input id="Id" value="@eventt.Id"/>
                         </div>
                     </div>
                 </div>
-                <button type="submit" asp-page-handler="Delete">Delete</button>
             </form>
+            <a href="/api/event/delete/event?eventId=@eventt.Id">Delete</a>
         </div>
         
        

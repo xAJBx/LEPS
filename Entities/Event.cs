@@ -11,5 +11,6 @@ namespace LEPS.Entities
         public string Name { get; set; }
         public decimal Cost { get; set; }
         public DateTime DateTime { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

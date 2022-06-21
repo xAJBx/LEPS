@@ -40,7 +40,8 @@ namespace LEPS.Pages.Series
 
         public void OnPostDelete()
         {
-            _dbContext.Remove(_dbContext.Event.Single(e => e.Id == Eventt.Id));
+            var eventt = _dbContext.Event.Single(e => e.Id == Eventt.Id);
+            eventt.IsDeleted = true;
             _dbContext.SaveChanges();
 
         }
