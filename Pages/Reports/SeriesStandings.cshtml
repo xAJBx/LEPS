@@ -1,7 +1,7 @@
 @page
 @using OpenDataShare
 @using Microsoft.EntityFrameworkCore
-@model LEPS.Pages.Reports.EventStandings
+@model LEPS.Pages.Reports.SeriesStandings
 @inject ApplicationDbContext ApplicationDbContext
 
 @{
@@ -30,17 +30,17 @@
 
 <html>
 <head>
-    <title>Event Standings</title>
+    <title>Series Standings</title>
 </head>
 <body>
 <div>
     
-    <h1>Event Standings</h1>
+    <h1>Series Standings</h1>
     <form>
         <div class="form-row">
             <div class="form-group">
                 <label asp-for="SeriesId">Series</label>
-                <select asp-for="EventId" asp-items="series" id="series" class="form-control">
+                <select asp-for="SeriesId" asp-items="series" id="series" class="form-control">
                     <option></option>
                 </select>
             </div>
@@ -60,33 +60,26 @@
         <div class="card">
             <div class="card-body">
                 <div class=card-title>
-                    Event Standings Report
+                    Series Standings Report
                 </div>
                 <table class="table">
                     <thead>
                     <tr>
-                        <th>Event</th>
                         <th>First Name</th>
                         <th>Last Name</th>
-                        <th>Place</th>
-                        <th></th>
+                        <th>Points</th>
+                        <th>Position</th>
                     </tr>
                     </thead>
                     <tbody>
-                    @foreach (var enrollment in Model.Data)
+                    @foreach (var data in Model.Data)
                     {
                         enrollmentCount += 1;
                         <tr>
-                            <td>@enrollment.Event.Name</td>
-                            <td>@enrollment.PlayerFirstName</td>
-                            <td>@enrollment.PlayerLastName</td>
-                            <td>@enrollment.Placement</td>
-                            <td>
-                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#placementModal"
-                                                                                                    data-enrollmentid="@enrollment.EventEnrollmentId">
-                                  Edit Standing
-                                </button>
-                            </td>
+                            <td>@data.PlayerFirstName</td>
+                            <td>@data.PlayerLastName</td>
+                            <td>@data.PlayerPoints</td>
+                            <td>@enrollmentCount</td>
                         </tr>
                     }
                     </tbody>

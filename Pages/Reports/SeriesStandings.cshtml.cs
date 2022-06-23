@@ -29,11 +29,10 @@ namespace LEPS.Pages.Reports
         {
             if (HasSearchCriteria)
             {
-                IIncludableQueryable<EventEnrollment, Event> query = _context.EventEnrollments.Include(e => e.Event);
-
+                IQueryable<EventEnrollment> query = null;
                 if (SeriesId.HasValue)
                 {
-                    query = (IIncludableQueryable<EventEnrollment, Event>) query.Where(e => e.Event.SeriesId == SeriesId);
+                    query = _context.EventEnrollments.Include(e => e.Event).Where(e => e.Event.SeriesId == SeriesId);
                 }
                 
                 var data = query.Select(e => new SeriesStandingsItem
@@ -43,28 +42,38 @@ namespace LEPS.Pages.Reports
                     PlayerId = e.PlayerId,
                     Placement = e.Placement
                 });
-                
-                IQueryable<ProcessesedStandingsItem> processesedData = null;
+
+                List<ProcessesedStandingsItem> processesedData = new List<ProcessesedStandingsItem>();
                 foreach (var d in data)
                 {
-                    var tmpData = processesedData.SingleOrDefault(pd => pd.PlayerId == d.PlayerId);
+                    ProcessesedStandingsItem tmpData = null;
+                    if (processesedData != null)
+                    { 
+                        tmpData = processesedData.SingleOrDefault(pd => pd.PlayerId == d.PlayerId);
+                    }
+
                     if (tmpData == default)
                     {
-                        processesedData.Append(new ProcessesedStandingsItem
+                        processesedData.Add(new ProcessesedStandingsItem
                         {
                             PlayerId = d.PlayerId,
                             PlayerFirstName = d.PlayerFirstName,
                             PlayerLastName = d.PlayerLastName,
                             PlayerPoints = d.Placement //event placement is = to num points given for that event...lower points = higher series.
                         });
+                        
+                    }
+                    else
+                    {
+                        tmpData.PlayerPoints += d.PlayersPoints;
                     }
                 }
-                
-                
+
+                Data = processesedData.OrderBy(x => x.PlayerPoints).ToList();
                 //Data = await data.OrderBy(x => x.Event.DateTime).ToListAsync();
             }
         }
-        public IEnumerable<SeriesStandingsItem> Data { get; set; }
+        public List<ProcessesedStandingsItem> Data { get; set; }
     }
 
     public class ProcessesedStandingsItem
