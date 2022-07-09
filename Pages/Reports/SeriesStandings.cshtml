@@ -1,0 +1,145 @@
+@page
+@using OpenDataShare
+@using Microsoft.EntityFrameworkCore
+@model LEPS.Pages.Reports.SeriesStandings
+@inject ApplicationDbContext ApplicationDbContext
+
+@{
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+    var eventEnrollments = ApplicationDbContext.EventEnrollments
+        .Include(e => e.Player)
+        .Include(e => e.Event);
+    var enrollmentCount = 0;
+
+    var series = ApplicationDbContext.Series.OrderByDescending(s => s.Id).ToArray().Select(e => new SelectListItem
+    {
+        Text = e.Name,
+        Value = e.Id.ToString()
+    });
+    
+    var events = (ApplicationDbContext.Event.OrderByDescending(e => e.DateTime).ToArray()).Select(e => new SelectListItem
+    {
+        Text = e.Name,
+        Value = e.Id.ToString()
+    });
+}
+
+
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Series Standings</title>
+</head>
+<body>
+<div>
+    
+    <h1>Series Standings</h1>
+    <form>
+        <div class="form-row">
+            <div class="form-group">
+                <label asp-for="SeriesId">Series</label>
+                <select asp-for="SeriesId" asp-items="series" id="series" class="form-control">
+                    <option></option>
+                </select>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary mb-2">Filter</button>
+    </form>
+    
+    @if (!Model.HasSearchCriteria)
+    {
+        <p>
+            Please enter search criteria above.
+        </p>
+    }
+    
+    @if (Model.Data?.Any() == true)
+    {
+        <div class="card">
+            <div class="card-body">
+                <div class=card-title>
+                    Series Standings Report
+                </div>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Points</th>
+                        <th>Position</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var data in Model.Data)
+                    {
+                        enrollmentCount += 1;
+                        <tr>
+                            <td>@data.PlayerFirstName</td>
+                            <td>@data.PlayerLastName</td>
+                            <td>@data.PlayerPoints</td>
+                            <td>@enrollmentCount</td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</div>
+<!-- Modal -->
+<div class="modal fade" id="placementModal" tabindex="-1" role="dialog" aria-labelledby="placementModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="placementModalTitle">Placement Edit</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="standing-form" method="post">
+                    
+                    <input type="hidden" id="enrollmentId" name="enrollmentId"/>
+                    <label for="standing"></label>
+                    <select name="standing">
+                        @foreach (var i in Enumerable.Range(1, enrollmentCount))
+                        {
+                            <option value="@i">@i</option>
+                        }
+                    </select>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="submitPlayerPositions('standing-form')">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script>
+        $("#placementModal").on("show.bs.modal", e => {
+            $("#enrollmentId").val($(e.relatedTarget).data('enrollmentid'))
+        })
+    
+        function submitPlayerPositions (formId){
+            $("#errors").html('');
+            $.ajax({
+                url: "/api/event/positionsubmition",
+                success: (d) => {
+                    console.log(d);
+                    location.reload()
+                },
+                data: JSON.stringify(Object.fromEntries(new FormData(document.getElementById(formId),document.getElementById(formId)))),
+                method: "POST",
+                contentType: "application/json"
+            })
+        
+            return false;
+        }
+    </script>
+}
+</body>
+</html>

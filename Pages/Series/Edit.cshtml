@@ -25,31 +25,71 @@
         var enrollmentCount = enrollments.Count();
         
         <div class="card event-card" style="width: 18rem;">
+            <form>
+                <div class="card-body">
+                    <h5 class="card-title">@eventt.Name</h5>
+                    <div>
+                        <div>
+                            <label for="event-name">Event Name</label>
+                            <input id="Name" value="@eventt.Name"/>
+                        </div>
+                        <div>
+                            <label for="event-cost">Entry Fee</label>
+                            <input id="Cost" type="number"  value="@eventt.Cost"/>
+                        </div>
+                        <div>
+                            <label for="event-pot">Pot</label>
+                            <input id="Pot" type="number" value="@eventt.Pot"/>
+                        </div>
+                        <div>
+                            <label for="event-date">Date</label>
+                            <input id="DateTime" value="@eventt.DateTime"/>
+                        </div>
+                        <div>
+                            <input id="Id" value="@eventt.Id"/>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <a href="/api/event/delete/event?eventId=@eventt.Id">Delete</a>
+        </div>
+        
+       
+    }
+    <a href="#" id="show-new-event">New Event</a>
+    <br/>
+    <div id="new-event" class="card event-card" style="width: 18rem;display: none;">
+        <form method="post">
             <div class="card-body">
-                <h5 class="card-title">@eventt.Name</h5>
+                <h5 class="card-title">New Event</h5>
                 <div>
-                    <i onclick="prependEventCard()" style="float: right;" class="fa-solid fa-plus"></i>
                     <div>
                         <label for="event-name">Event Name</label>
-                        <input id="event-name" name="eventName0" value="@eventt.Name"/>
+                        <input asp-for="Eventt.Name" />
                     </div>
                     <div>
                         <label for="event-cost">Entry Fee</label>
-                        <input type="number" id="event-cost" name="eventCost0" value="@eventt.Cost"/>
-                    </div>
-                    <div>
-                        <label for="event-pot">Pot</label>
-                        <input type="number" id="event-pot" name="eventPot0" value="@eventt.Pot"/>
+                        <input asp-for="Eventt.Cost"  />
                     </div>
                     <div>
                         <label for="event-date">Date</label>
-                        <input id="event-date" type="datetime-local" name="eventDate0" value="@eventt.DateTime"/>
+                        <input asp-for="Eventt.DateTime" />
                     </div>
                 </div>
+                <button type="submit" class="btn btn-primary">Save</button>
             </div>
-        </div>
-        <br/>
-    }
+                    
+        </form>
+    </div>  
+    <br/>
 </div>
 </body>
 </html>
+@section Scripts
+{
+  <script>
+   $("#show-new-event").on("click", function (){
+       $("#new-event").show();
+   })
+  </script>  
+}

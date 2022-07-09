@@ -24,8 +24,17 @@ namespace LEPS.Controllers
         {
             _context = context;
         }
-        
-        
+
+        [HttpGet]
+        [Route("delete/event")]
+        public async Task<IActionResult> DeleteEvent([FromQuery]int eventId)
+        {
+            var eventt = _context.Event.Single(e => e.Id == eventId);
+            eventt.IsDeleted = true;
+            _context.SaveChanges();
+            return Ok($"EventId: {eventId}");
+        }
+
         [HttpPost]
         [Route("enrollplayer")]
         public async Task<IActionResult> PlayerEnrollment([FromBody] object json)
