@@ -65,7 +65,7 @@ namespace LEPS.Pages.Reports
                     }
                     else
                     {
-                        tmpData.PlayerPoints += d.PlayersPoints;
+                        tmpData.PlayerPoints += d.Placement;
                     }
                 }
 
